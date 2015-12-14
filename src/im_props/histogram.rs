@@ -28,3 +28,13 @@ impl Histogram {
  		return *key;
 	}	
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Histogram;
+	
+	#[test]
+	fn get_histogram(){
+		assert!(true);
+	}
+}
