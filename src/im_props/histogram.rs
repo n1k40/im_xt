@@ -31,10 +31,13 @@ impl Histogram {
 
 #[cfg(test)]
 mod tests {
+	extern crate image;
     use super::Histogram;
+	use super::image::{ImageBuffer, Luma};
 	
 	#[test]
 	fn get_histogram(){
+		let img : ImageBuffer<Luma<u8>,_>   = ImageBuffer::new(512, 512);
 		assert!(true);
 	}
 }
