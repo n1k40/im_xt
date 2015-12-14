@@ -33,11 +33,14 @@ impl Histogram {
 mod tests {
 	extern crate image;
     use super::Histogram;
-	use super::image::{ImageBuffer, Luma};
+	use super::image::{ImageBuffer, Luma, DynamicImage};
 	
 	#[test]
 	fn get_histogram(){
-		let img : ImageBuffer<Luma<u8>,_>   = ImageBuffer::new(512, 512);
-		assert!(true);
+		let image_buffer : ImageBuffer<Luma<u8>,_>   = ImageBuffer::new(512, 512);
+		let luma =  DynamicImage::new_luma8(512, 512);
+		let hist = Histogram::new(&luma);
+		let mode = hist.get_mode();
+		assert_eq!(0, mode);
 	}
 }
