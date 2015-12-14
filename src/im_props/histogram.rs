@@ -3,14 +3,14 @@ extern crate image;
 use self::image::DynamicImage;
 use std::collections::HashMap;
 
-pub trait Histogram<K, V> {
-	fn get_histogram(&self) -> HashMap<K, V>;
+pub struct Histogram{
+	_hashmap: HashMap<u8, i32>,
 }
 
-impl Histogram<u8, i32> for DynamicImage{
-	fn get_histogram(&self) -> HashMap<u8, i32>{
+impl Histogram {
+	pub fn new(image : &DynamicImage) -> Histogram{
 		let mut pixel_count = HashMap::new();
-		'outer : for pixel in self.raw_pixels(){
+		'outer : for pixel in image.raw_pixels(){
 			if !pixel_count.contains_key(&pixel){
 				pixel_count.insert(pixel, 1);
 				continue 'outer;
@@ -20,7 +20,11 @@ impl Histogram<u8, i32> for DynamicImage{
 				None => continue 'outer,
 			}			
 		}
-		return pixel_count;
+		return Histogram{_hashmap:pixel_count} 
 	}
 	
+	pub fn get_mode(&self) -> i32{
+		let (key, _) = self._hashmap.iter().max_by(|&(_, v)| v).unwrap();
+ 		return *key as i32;
+	}	
 }
