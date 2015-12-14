@@ -23,8 +23,8 @@ impl Histogram {
 		return Histogram{_hashmap:pixel_count} 
 	}
 	
-	pub fn get_mode(&self) -> i32{
+	pub fn get_mode(&self) -> u8{
 		let (key, _) = self._hashmap.iter().max_by(|&(_, v)| v).unwrap();
- 		return *key as i32;
+ 		return *key;
 	}	
 }
