@@ -18,14 +18,21 @@ impl Histogram {
 			match pixel_count.get_mut(&pixel){
 				Some(count) => *count+=1,
 				None => continue 'outer,
-			}			
+			};
+			//let v = pixel_count.get(&pixel);	
+			//println!("pixel is: {:?} count is: {:?}", pixel, v);			
 		}
-		return Histogram{_hashmap:pixel_count} 
+		Histogram{_hashmap:pixel_count} 
 	}
 	
 	pub fn get_mode(&self) -> u8{
-		let (key, _) = self._hashmap.iter().max_by(|&(_, v)| v).unwrap();
- 		return *key;
+		//for (xx, yy) in &self._hashmap{
+			//println!("key is : {:?} value is: {:?}", xx, yy);
+		//}		
+        match self._hashmap.iter().max_by(|&(_, v)| v) {
+            Some((key, _)) => *key,
+            None => panic!("nothing found in histogram!"),
+        }		
 	}	
 }
 
@@ -33,14 +40,25 @@ impl Histogram {
 mod tests {
 	extern crate image;
     use super::Histogram;
-	use super::image::{ImageBuffer, Luma, DynamicImage};
+	use super::image::{ImageBuffer, Luma, DynamicImage, GenericImage};
 	
 	#[test]
 	fn get_histogram(){
-		let image_buffer : ImageBuffer<Luma<u8>,_>   = ImageBuffer::new(512, 512);
-		let luma =  DynamicImage::new_luma8(512, 512);
+        let height = 512;
+        let width = 512;
+		let mut image_buffer : ImageBuffer<Luma<u8>,_>   = ImageBuffer::new(512, 512);
+		let mut luma =  DynamicImage::new_luma8(width, height);
+        if let DynamicImage::ImageLuma8(ref mut luma) = luma {
+            for row in 0..width{
+                for column in 0..height{
+                    luma.get_pixel_mut(row, column).data = [100];
+                }
+            }
+        }
+		
 		let hist = Histogram::new(&luma);
-		let mode = hist.get_mode();
-		assert_eq!(0, mode);
+		let mode = hist.get_mode();		
+		println!("mode is: {:?}", mode);
+		assert_eq!(100, mode);
 	}
 }
