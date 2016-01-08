@@ -1,4 +1,6 @@
 extern crate image;
+
+use im_props::histogram::Histogram;
 trait otsu_threshold{
     fn get_otsu(&self) -> i32;
 }
