@@ -1,4 +1,6 @@
 extern crate image;
+
+mod histogram;
 trait otsu_threshold{
     fn get_otsu(&self) -> i32;
 }
