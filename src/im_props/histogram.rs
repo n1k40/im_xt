@@ -33,7 +33,12 @@ impl Histogram {
             Some((key, _)) => *key,
             None => panic!("nothing found in histogram!"),
         }		
-	}	
+	}
+    
+    pub fn get_values_under_threshold(threshold : i32) -> Vec<(u8, i32)>{
+        let v: Vec<(u8, i32)> = Vec::new();
+        v
+    }	
 }
 
 #[cfg(test)]
