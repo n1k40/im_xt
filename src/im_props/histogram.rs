@@ -36,7 +36,7 @@ impl Histogram {
 	}
     
     pub fn get_values_under_threshold(threshold : i32) -> Vec<(u8, i32)>{
-        let v: Vec<(u8, i32)> = Vec::new();
+        let mut v: Vec<(u8, i32)> = Vec::new();
         v
     }	
 }
