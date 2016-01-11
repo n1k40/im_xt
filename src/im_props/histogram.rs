@@ -38,7 +38,13 @@ impl Histogram {
         self._hashmap.iter()
                 .take(threshold)
                 .collect()                       
-    }	
+    }
+    
+    pub fn get_values_over_threshold(&self, threshold: usize) -> Vec<(&u8, &i32)>{
+        self._hashmap.iter()
+            .skip(threshold)
+            .collect()
+    }
 }
 
 #[cfg(test)]
@@ -83,6 +89,27 @@ mod tests {
         let threshold = 10;
         let x = hist.get_values_under_threshold(threshold);
         assert_eq!(threshold, x.len());
+        
+    }
+    
+    #[test]
+	fn values_over_threshold(){
+        let height = 512;
+        let width = 512;
+		let mut luma =  DynamicImage::new_luma8(width, height);
+        if let DynamicImage::ImageLuma8(ref mut luma) = luma {
+            for row in 0..width{
+                for column in 0..height{
+                    luma.get_pixel_mut(row, column).data = [100];
+                }
+            }
+        }
+		
+		let hist = Histogram::new(&luma);
+        let limit = 10;
+        let threshold =255-limit;
+        let x = hist.get_values_over_threshold(threshold);
+        assert_eq!(limit, x.len());
         
     }
 }
