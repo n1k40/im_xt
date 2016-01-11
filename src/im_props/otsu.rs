@@ -2,6 +2,8 @@ extern crate image;
 
 use self::image::*;
 use std::ops::{Add, Sub};
+use std::cmp::Ordering;
+
 use im_props::histogram::Histogram;
 
 trait otsu_threshold{
@@ -35,15 +37,16 @@ impl otsu_threshold for image::DynamicImage {
         let histogram = Histogram::new(self);
         let (width, height) = self.dimensions();
         let number_pixels = (width * height) as f32;
-        let mut values = Vec::<f32>::new();
+        let mut within_class_variances = Vec::<f32>::new();
         for threshold in 0..256 {
             let less_than_thresh = histogram.get_values_under_threshold(threshold);
             let (weight_b, variance_b) = process(&less_than_thresh,number_pixels);
             let more_than_thresh = histogram.get_values_over_threshold_inclusive(threshold);
             let (weight_f, variance_f) = process(&more_than_thresh, number_pixels);
-            let x = (weight_b*variance_b) + (weight_f * variance_f);
-            values.push(x);
+            let within_class_variance = (weight_b*variance_b) + (weight_f * variance_f);
+            within_class_variances.push(within_class_variance);
         }
-        values.iter().min().unwrap();        
+        within_class_variances.sort_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal));
+        *within_class_variances.iter().nth(1).unwrap()
     }
 }
