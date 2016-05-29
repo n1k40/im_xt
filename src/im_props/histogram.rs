@@ -24,10 +24,7 @@ impl Histogram {
 		Histogram{_hashmap:pixel_count} 
 	}
 	
-	pub fn get_mode(&self) -> u8{
-		//for (xx, yy) in &self._hashmap{
-			//println!("key is : {:?} value is: {:?}", xx, yy);
-		//}		
+	pub fn get_mode(&self) -> u8{	
         match self._hashmap.iter().max_by(|&(_, v)| v) {
             Some((key, _)) => *key,
             None => panic!("nothing found in histogram!"),
@@ -46,12 +43,15 @@ impl Histogram {
     
     pub fn get_values_over_threshold(&self, threshold: usize) -> Vec<(&u8, &i32)>{
         self._hashmap.iter()
-            .skip(threshold)
+            .skip(threshold+1)
             .collect()
     }
     
-    pub fn get_values_over_threshold_inclusive(&self, threshold: usize) -> Vec<(&u8, &i32)>{
-        self.get_values_over_threshold(threshold-1)
+    pub fn get_values_over_threshold_inclusive(&self, threshold: usize) -> Vec<(&u8, &i32)>{       
+        match threshold{
+            0 => self.get_values_over_threshold(threshold),
+            _ => self.get_values_over_threshold(threshold-1), 
+        }        
     }
 }
 
@@ -80,6 +80,7 @@ mod tests {
 		println!("mode is: {:?}", mode);
 		assert_eq!(100, mode);
 	}
+    
     #[test]
 	fn values_under_threshold(){
         let height = 512;
@@ -117,7 +118,6 @@ mod tests {
         let threshold = 10;
         let x = hist.get_values_under_threshold_inclusive(threshold);
         assert_eq!(threshold+1, x.len());
-        
     }
     
     #[test]
@@ -135,9 +135,9 @@ mod tests {
 		
 		let hist = Histogram::new(&luma);
         let limit = 10;
-        let threshold =255-limit;
+        let threshold =246;
         let x = hist.get_values_over_threshold(threshold);
-        assert_eq!(limit, x.len());
+        assert_eq!(8, x.len());
         
     }
     
@@ -157,9 +157,9 @@ mod tests {
 		
 		let hist = Histogram::new(&luma);
         let limit = 10;
-        let threshold =255-limit;
+        let threshold =246;
         let x = hist.get_values_over_threshold_inclusive(threshold);
-        assert_eq!(limit+1, x.len());
+        assert_eq!(9, x.len());
         
     }
 }
