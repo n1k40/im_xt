@@ -4,4 +4,5 @@ version = "0.1.0"
 authors = ["n1k40 <vowlesn@hotmail.co.uk>"]
 
 [dependencies]
-image = "*"
+winapi = "^0.2.6"
+image = "^0.10.0"
